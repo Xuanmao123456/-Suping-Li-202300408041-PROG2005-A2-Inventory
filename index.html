@@ -3,51 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management System (Part1)</title>
+    <title>Inventory Management System</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Import compiled JavaScript file, ensure TS is compiled first -->
     <script src="app.js" defer></script>
 </head>
 <body>
 <div class="container">
-    <h1>Inventory Management System</h1>
+    <header class="system-header">
+        <h1>Inventory Management System</h1>
+        <p class="header-subtitle">Track and manage your inventory efficiently</p>
+    </header>
 
-    <!-- Item Addition Form: Collect new item information -->
-    <section class="add-item-form">
-        <h2>Add New Item</h2>
-        <form id="add-item-form">
+    <!-- Add Item Form -->
+    <section class="card add-item-form">
+        <h2 class="section-title">Add New Inventory Item</h2>
+        <form id="add-item-form" class="item-form">
             <div class="form-group">
-                <label for="item-id">Item ID (Unique):</label>
-                <input type="text" id="item-id" required placeholder="e.g. ITEM004">
+                <label for="item-id">Item ID <span class="required">*</span> (Format: ITEM000):</label>
+                <input type="text" id="item-id" class="form-input" placeholder="e.g. ITEM004" autocomplete="off">
                 <span class="error-message" id="id-error"></span>
             </div>
             <div class="form-group">
-                <label for="item-name">Item Name:</label>
-                <input type="text" id="item-name" required placeholder="e.g. Monitor">
+                <label for="item-name">Item Name <span class="required">*</span>:</label>
+                <input type="text" id="item-name" class="form-input" placeholder="e.g. Monitor" autocomplete="off">
                 <span class="error-message" id="name-error"></span>
             </div>
             <div class="form-group">
-                <label for="item-price">Price ($):</label>
-                <input type="number" id="item-price" min="0" step="0.01" required placeholder="e.g. 199.99">
+                <label for="item-price">Price ($) <span class="required">*</span>:</label>
+                <input type="number" id="item-price" class="form-input" min="0" step="0.01" placeholder="e.g. 199.99">
                 <span class="error-message" id="price-error"></span>
             </div>
             <div class="form-group">
-                <label for="item-quantity">Quantity:</label>
-                <input type="number" id="item-quantity" min="0" required placeholder="e.g. 20">
+                <label for="item-quantity">Quantity <span class="required">*</span>:</label>
+                <input type="number" id="item-quantity" class="form-input" min="0" placeholder="e.g. 20">
                 <span class="error-message" id="quantity-error"></span>
             </div>
-            <div class="form-group">
-                <label for="item-popular">Is Popular:</label>
-                <input type="checkbox" id="item-popular">
+            <div class="form-group form-checkbox">
+                <label for="item-popular">Mark as Popular Item:</label>
+                <input type="checkbox" id="item-popular" class="form-checkbox-input">
             </div>
-            <button type="submit" class="btn">Add Item</button>
+            <button type="submit" class="btn primary-btn" id="submit-btn">
+                <span class="btn-text">Add Item</span>
+                <span class="loading-spinner" id="submit-spinner"></span>
+            </button>
         </form>
     </section>
 
-    <!-- Item List Display Area: Show all inventory items -->
-    <section class="inventory-list">
-        <h2>All Items</h2>
-        <div id="items-container"></div>
+    <!-- Search & Filter (Day3 Core Feature) -->
+    <section class="card search-filter">
+        <h2 class="section-title">Search & Filter Inventory</h2>
+        <div class="search-filter-wrapper">
+            <div class="search-group">
+                <label for="search-input" class="visually-hidden">Search Items:</label>
+                <input type="text" id="search-input" class="form-input search-input" placeholder="Search by ID/Name (case-insensitive)">
+                <button id="search-btn" class="btn primary-btn">Search</button>
+                <button id="reset-btn" class="btn secondary-btn">Reset</button>
+            </div>
+            <div class="filter-group">
+                <label for="filter-popular" class="filter-label">
+                    <input type="checkbox" id="filter-popular" class="form-checkbox-input">
+                    Show Only Popular Items
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inventory List -->
+    <section class="card inventory-list">
+        <h2 class="section-title">Current Inventory</h2>
+        <div id="items-container" class="items-grid"></div>
+        <div id="empty-state" class="empty-state hidden">
+            <h3>No Items Found</h3>
+            <p>Try adjusting your search/filter or add a new item to get started</p>
+        </div>
     </section>
 </div>
 </body>

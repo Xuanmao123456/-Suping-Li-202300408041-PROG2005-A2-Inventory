@@ -16,7 +16,6 @@ interface Item {
 }
 
 // Global inventory array to store all items
-// Changed from const to let to support adding new items
 let inventoryItems: Item[] = [
     { id: "ITEM001", name: "Laptop", price: 999.99, quantity: 10, isPopular: true },
     { id: "ITEM002", name: "Mouse", price: 29.99, quantity: 50, isPopular: false },
@@ -30,23 +29,23 @@ let inventoryItems: Item[] = [
  */
 function renderItems(items: Item[]): void {
     const container = document.getElementById("items-container");
-    if (!container) return; // Exit if the container is not found
+    if (!container) return;
 
-    container.innerHTML = ""; // Clear existing content
+    container.innerHTML = "";
 
-    // Display prompt when there are no items in the inventory
     if (items.length === 0) {
-        container.innerHTML = "No items in inventory";
+        container.innerHTML = "<p class='empty-message'>No items match your search/filter criteria</p>";
         return;
     }
 
-    // Traverse the items array and render each item as a card
     items.forEach(item => {
         const itemCard = document.createElement("div");
         itemCard.className = "item-card";
-        // Use template strings to splice item information, add popular badge and out-of-stock prompt
         itemCard.innerHTML = `
-            ${item.name} ${item.isPopular ? "Popular" : ""}ID: ${item.id}Price: $${item.price.toFixed(2)}Quantity: ${item.quantity} ${item.quantity === 0 ? "Out of Stock" : ""}
+            <h3>${item.name} ${item.isPopular ? "<span class='popular-badge'>Popular</span>" : ""}</h3>
+            <p>ID: ${item.id}</p>
+            <p>Price: $${item.price.toFixed(2)}</p>
+            <p>Quantity: ${item.quantity} ${item.quantity === 0 ? "<span class='out-of-stock'>Out of Stock</span>" : ""}</p>
         `;
         container.appendChild(itemCard);
     });
@@ -68,16 +67,13 @@ function isIdUnique(id: string): boolean {
  */
 function validateForm(): boolean {
     let isValid = true;
-    // Get input values and process (trim whitespace, type conversion)
     const id = (document.getElementById("item-id") as HTMLInputElement).value.trim();
     const name = (document.getElementById("item-name") as HTMLInputElement).value.trim();
     const price = parseFloat((document.getElementById("item-price") as HTMLInputElement).value);
     const quantity = parseInt((document.getElementById("item-quantity") as HTMLInputElement).value);
 
-    // Clear all previous error messages before validation
     document.querySelectorAll(".error-message").forEach(el => (el as HTMLElement).textContent = "");
 
-    // ID validation: non-empty, correct format, unique
     if (!id) {
         (document.getElementById("id-error") as HTMLElement).textContent = "Item ID is required";
         isValid = false;
@@ -89,7 +85,6 @@ function validateForm(): boolean {
         isValid = false;
     }
 
-    // Name validation: non-empty, max length 50 characters
     if (!name) {
         (document.getElementById("name-error") as HTMLElement).textContent = "Item name is required";
         isValid = false;
@@ -98,7 +93,6 @@ function validateForm(): boolean {
         isValid = false;
     }
 
-    // Price validation: non-negative number, max $10000
     if (isNaN(price) || price < 0) {
         (document.getElementById("price-error") as HTMLElement).textContent = "Price must be a non-negative number";
         isValid = false;
@@ -107,7 +101,6 @@ function validateForm(): boolean {
         isValid = false;
     }
 
-    // Quantity validation: non-negative integer
     if (isNaN(quantity) || quantity < 0 || !Number.isInteger(quantity)) {
         (document.getElementById("quantity-error") as HTMLElement).textContent = "Quantity must be a non-negative integer";
         isValid = false;
@@ -122,12 +115,9 @@ function validateForm(): boolean {
  * @param e - Form submission event object
  */
 function handleFormSubmit(e: Event): void {
-    e.preventDefault(); // Prevent default form submission behavior
-
-    // If form validation fails, exit the function
+    e.preventDefault();
     if (!validateForm()) return;
 
-    // Collect form data and convert to Item type
     const newItem: Item = {
         id: (document.getElementById("item-id") as HTMLInputElement).value.trim(),
         name: (document.getElementById("item-name") as HTMLInputElement).value.trim(),
@@ -136,21 +126,64 @@ function handleFormSubmit(e: Event): void {
         isPopular: (document.getElementById("item-popular") as HTMLInputElement).checked
     };
 
-    // Add the new item to the global inventory array
     inventoryItems.push(newItem);
-
-    // Re-render the item list to display the new item
     renderItems(inventoryItems);
-
-    // Reset the form to facilitate next input
     (document.getElementById("add-item-form") as HTMLFormElement).reset();
-
-    // Pop up a prompt to inform the user that the item was added successfully
     alert("Item added successfully!");
 }
 
-// Bind the form submission event to the form element
-document.getElementById("add-item-form")?.addEventListener("submit", handleFormSubmit);
+/**
+ * Search items by ID or name (case-insensitive)
+ * @param keyword - Search keyword entered by the user
+ * @returns Filtered item array matching the keyword
+ */
+function searchItems(keyword: string): Item[] {
+    if (!keyword.trim()) return inventoryItems; // Return all items if keyword is empty
+    const lowerKeyword = keyword.toLowerCase();
+    return inventoryItems.filter(item =>
+        item.id.toLowerCase().includes(lowerKeyword) ||
+        item.name.toLowerCase().includes(lowerKeyword)
+    );
+}
 
-// Render the initial item list when the page loads
+/**
+ * Filter items by "popular" status
+ * @param items - The item array to be filtered
+ * @param showOnlyPopular - Whether to show only popular items
+ * @returns Filtered item array based on popular status
+ */
+function filterPopularItems(items: Item[], showOnlyPopular: boolean): Item[] {
+    if (!showOnlyPopular) return items; // Return original array if filter is off
+    return items.filter(item => item.isPopular);
+}
+
+/**
+ * Handle search button click event
+ * Combine search and filter logic, then re-render items
+ */
+function handleSearch(): void {
+    const keyword = (document.getElementById("search-input") as HTMLInputElement).value;
+    const showPopular = (document.getElementById("filter-popular") as HTMLInputElement).checked;
+
+    let filteredItems = searchItems(keyword);
+    filteredItems = filterPopularItems(filteredItems, showPopular);
+    renderItems(filteredItems);
+}
+
+/**
+ * Reset search input and filter checkbox, re-render all items
+ */
+function handleReset(): void {
+    (document.getElementById("search-input") as HTMLInputElement).value = "";
+    (document.getElementById("filter-popular") as HTMLInputElement).checked = false;
+    renderItems(inventoryItems);
+}
+
+// Bind events
+document.getElementById("add-item-form")?.addEventListener("submit", handleFormSubmit);
+document.getElementById("search-btn")?.addEventListener("click", handleSearch);
+document.getElementById("reset-btn")?.addEventListener("click", handleReset);
+document.getElementById("filter-popular")?.addEventListener("change", handleSearch); // Filter on checkbox change
+
+// Initial render
 renderItems(inventoryItems);
