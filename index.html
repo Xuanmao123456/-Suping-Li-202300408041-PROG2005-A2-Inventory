@@ -14,10 +14,13 @@
         <p class="header-subtitle">Track and manage your inventory efficiently</p>
     </header>
 
-    <!-- Add Item Form -->
+    <!-- Add/Edit Item Form -->
     <section class="card add-item-form">
-        <h2 class="section-title">Add New Inventory Item</h2>
+        <h2 class="section-title" id="form-title">Add New Inventory Item</h2>
         <form id="add-item-form" class="item-form">
+            <!-- Hidden input to store edit item ID -->
+            <input type="hidden" id="edit-item-id" value="">
+
             <div class="form-group">
                 <label for="item-id">Item ID <span class="required">*</span> (Format: ITEM000):</label>
                 <input type="text" id="item-id" class="form-input" placeholder="e.g. ITEM004" autocomplete="off">
@@ -42,10 +45,17 @@
                 <label for="item-popular">Mark as Popular Item:</label>
                 <input type="checkbox" id="item-popular" class="form-checkbox-input">
             </div>
-            <button type="submit" class="btn primary-btn" id="submit-btn">
-                <span class="btn-text">Add Item</span>
-                <span class="loading-spinner" id="submit-spinner"></span>
-            </button>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" class="btn primary-btn" id="submit-btn">
+                    <span class="btn-text">Add Item</span>
+                    <span class="loading-spinner" id="submit-spinner"></span>
+                </button>
+                <button type="button" class="btn secondary-btn" id="cancel-edit-btn" style="display: none;">
+                    Cancel Edit
+                </button>
+            </div>
         </form>
     </section>
 
@@ -68,15 +78,32 @@
         </div>
     </section>
 
-    <!-- Inventory List -->
+    <!-- Inventory List & Bulk Actions (Day4 New Feature) -->
     <section class="card inventory-list">
-        <h2 class="section-title">Current Inventory</h2>
+        <div class="inventory-header">
+            <h2 class="section-title">Current Inventory</h2>
+            <button id="clear-inventory-btn" class="btn danger-btn">
+                Clear All Items
+            </button>
+        </div>
         <div id="items-container" class="items-grid"></div>
         <div id="empty-state" class="empty-state hidden">
             <h3>No Items Found</h3>
             <p>Try adjusting your search/filter or add a new item to get started</p>
         </div>
     </section>
+</div>
+
+<!-- Confirmation Modal (Day4 New Feature) -->
+<div id="confirmation-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 id="modal-title">Confirm Action</h3>
+        <p id="modal-message">Are you sure you want to perform this action?</p>
+        <div class="modal-actions">
+            <button id="modal-cancel-btn" class="btn secondary-btn">Cancel</button>
+            <button id="modal-confirm-btn" class="btn danger-btn">Confirm</button>
+        </div>
+    </div>
 </div>
 </body>
 </html>

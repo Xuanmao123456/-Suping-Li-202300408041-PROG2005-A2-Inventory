@@ -17,6 +17,7 @@
     --secondary-light: #94a3b8;
     --success: #16a34a;
     --danger: #dc2626;
+    --danger-light: #ef4444;
     --warning: #f59e0b;
     --background: #f8fafc;
     --card-bg: #ffffff;
@@ -31,6 +32,7 @@
     --radius-md: 6px;
     --radius-lg: 8px;
     --transition: all 0.25s ease-in-out;
+    --modal-overlay: rgba(0, 0, 0, 0.5);
 }
 
 body {
@@ -117,6 +119,20 @@ body {
     border-bottom: 1px solid var(--border);
 }
 
+/* Inventory Header with Clear Button (Day4 New) */
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.inventory-header .section-title {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
 /* ==============================
    Form Styles
    ============================== */
@@ -147,6 +163,12 @@ body {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+.form-input:disabled {
+    background-color: #f1f5f9;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
 .invalid-input {
     border-color: var(--danger) !important;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
@@ -172,6 +194,13 @@ body {
     font-size: 0.875rem;
     margin-top: 6px;
     line-height: 1.4;
+}
+
+/* Form Actions (Day4 New) */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 /* ==============================
@@ -215,6 +244,38 @@ body {
 .secondary-btn:hover {
     background-color: var(--secondary-light);
     box-shadow: var(--shadow-sm);
+}
+
+.danger-btn {
+    background-color: var(--danger);
+    color: white;
+}
+
+.danger-btn:hover {
+    background-color: var(--danger-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.edit-btn {
+    background-color: var(--warning);
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.edit-btn:hover {
+    background-color: #eab308;
+}
+
+.delete-btn {
+    background-color: var(--danger);
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.delete-btn:hover {
+    background-color: var(--danger-light);
 }
 
 /* Loading Spinner */
@@ -284,6 +345,9 @@ body {
     padding: 20px;
     transition: var(--transition);
     opacity: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .item-card:hover {
@@ -319,6 +383,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin-bottom: 16px;
+    flex: 1;
 }
 
 .item-details p {
@@ -328,6 +394,13 @@ body {
 
 .item-details strong {
     color: var(--text-primary);
+}
+
+/* Item Actions (Day4 New) */
+.item-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
 }
 
 /* Badge Styles */
@@ -364,6 +437,50 @@ body {
 }
 
 /* ==============================
+   Modal Styles (Day4 New Feature)
+   ============================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 24px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.modal-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.modal-content p {
+    margin-bottom: 24px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* ==============================
    Responsive Styles
    ============================== */
 @media (max-width: 768px) {
@@ -397,6 +514,20 @@ body {
 
     .form-group {
         margin-bottom: 16px;
+    }
+
+    .inventory-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .item-actions {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        padding: 20px;
     }
 }
 
