@@ -10,6 +10,9 @@ interface InventoryItem {
     isPopular: boolean;
 }
 
+// Local Storage Key (Day6 New) - Unique key for storing inventory data
+const LOCAL_STORAGE_KEY = "inventory_management_system_data";
+
 // Global inventory data - initial sample items for demonstration
 const INITIAL_INVENTORY: InventoryItem[] = [
     { id: "ITEM001", name: "Laptop", price: 999.99, quantity: 10, isPopular: true },
@@ -19,7 +22,7 @@ const INITIAL_INVENTORY: InventoryItem[] = [
 
 // State management - reactive inventory data
 let inventoryItems: InventoryItem[] = [...INITIAL_INVENTORY];
-// Track current edit item ID (Day4 New Feature)
+// Track current edit item ID
 let currentEditItemId: string = "";
 
 /**
@@ -58,18 +61,30 @@ const DOM_ELEMENTS = {
     emptyState: document.getElementById("empty-state") as HTMLDivElement,
     clearInventoryBtn: document.getElementById("clear-inventory-btn") as HTMLButtonElement,
 
-    // Modal (Day4 New Feature)
+    // Modal
     confirmationModal: document.getElementById("confirmation-modal") as HTMLDivElement,
     modalTitle: document.getElementById("modal-title") as HTMLHeadingElement,
     modalMessage: document.getElementById("modal-message") as HTMLParagraphElement,
     modalCancelBtn: document.getElementById("modal-cancel-btn") as HTMLButtonElement,
-    modalConfirmBtn: document.getElementById("modal-confirm-btn") as HTMLButtonElement
+    modalConfirmBtn: document.getElementById("modal-confirm-btn") as HTMLButtonElement,
+
+    // Day6 New: Local Storage Buttons
+    saveInventoryBtn: document.getElementById("save-inventory-btn") as HTMLButtonElement,
+    loadInventoryBtn: document.getElementById("load-inventory-btn") as HTMLButtonElement,
+
+    // Day6 New: Import/Export Buttons
+    importFileInput: document.getElementById("import-file") as HTMLInputElement,
+    exportBtn: document.getElementById("export-btn") as HTMLButtonElement,
+
+    // Day6 New: Toast Notification
+    toastNotification: document.getElementById("toast-notification") as HTMLDivElement,
+    toastMessage: document.getElementById("toast-message") as HTMLParagraphElement
 };
 
 /**
  * Render inventory items to the DOM with visual hierarchy
  * Handles empty state and item card styling based on stock/popularity
- * Adds edit/delete buttons for each item (Day4 New Feature)
+ * Adds edit/delete buttons for each item
  * @param items - Filtered inventory items to render
  */
 function renderInventory(items: InventoryItem[]): void {
@@ -89,7 +104,7 @@ function renderInventory(items: InventoryItem[]): void {
         // Add conditional classes for visual feedback
         itemCard.className = `item-card ${item.quantity === 0 ? "out-of-stock-card" : ""} ${item.isPopular ? "popular-card" : ""}`;
 
-        // Card content with edit/delete buttons (Day4 New)
+        // Card content with edit/delete buttons
         itemCard.innerHTML = `
             <div class="item-header">
                 <h3 class="item-name">${item.name}</h3>
@@ -115,7 +130,7 @@ function renderInventory(items: InventoryItem[]): void {
         // Trigger reflow before animation
         setTimeout(() => itemCard.style.opacity = "1", 10);
 
-        // Add event listeners for edit/delete buttons (Day4 New)
+        // Add event listeners for edit/delete buttons
         itemCard.querySelector<HTMLButtonElement>(".edit-btn")?.addEventListener("click", () => handleEditItem(item.id));
         itemCard.querySelector<HTMLButtonElement>(".delete-btn")?.addEventListener("click", () => handleDeleteItem(item.id));
     });
@@ -124,7 +139,7 @@ function renderInventory(items: InventoryItem[]): void {
 /**
  * Validate item ID format and uniqueness
  * Real-time validation on input blur
- * Skips uniqueness check when editing existing item (Day4 Adjustment)
+ * Skips uniqueness check when editing existing item
  * @param id - Item ID to validate
  * @returns Validation result with error message (if any)
  */
@@ -142,7 +157,7 @@ function validateItemId(id: string): { valid: boolean; message: string } {
         return { valid: false, message: "ID must follow format: ITEM000 (e.g. ITEM004)" };
     }
 
-    // Uniqueness check - skip if editing existing item (Day4 Adjustment)
+    // Uniqueness check - skip if editing existing item
     if (currentEditItemId !== trimmedId && inventoryItems.some(item => item.id === trimmedId)) {
         return { valid: false, message: "This ID already exists (must be unique)" };
     }
@@ -283,7 +298,7 @@ function validateForm(): boolean {
 
 /**
  * Handle form submission (Add/Edit Mode)
- * Supports both adding new items and updating existing items (Day4 Core Feature)
+ * Supports both adding new items and updating existing items
  * @param e - Form submit event
  */
 async function handleFormSubmit(e: Event): Promise<void> {
@@ -311,20 +326,20 @@ async function handleFormSubmit(e: Event): Promise<void> {
         };
 
         if (currentEditItemId) {
-            // Edit Mode: Update existing item (Day4 New)
+            // Edit Mode: Update existing item
             const itemIndex = inventoryItems.findIndex(item => item.id === currentEditItemId);
             if (itemIndex !== -1) {
                 // Preserve ID if user didn't change it (prevent duplicate ID issues)
                 newItem.id = currentEditItemId;
                 inventoryItems[itemIndex] = newItem;
-                alert(`Item ${currentEditItemId} updated successfully!`);
+                showToast(`Item ${currentEditItemId} updated successfully!`, "success");
             }
             // Exit edit mode
             cancelEditMode();
         } else {
             // Add Mode: Create new item
             inventoryItems.push(newItem);
-            alert("Item added successfully to inventory!");
+            showToast("Item added successfully to inventory!", "success");
         }
 
         // Re-render inventory
@@ -338,7 +353,7 @@ async function handleFormSubmit(e: Event): Promise<void> {
 
     } catch (error) {
         console.error("Error processing item:", error);
-        alert(currentEditItemId ? "Failed to update item. Please try again." : "Failed to add item. Please try again.");
+        showToast(currentEditItemId ? "Failed to update item. Please try again." : "Failed to add item. Please try again.", "error");
     } finally {
         // Hide loading state
         DOM_ELEMENTS.submitBtn.disabled = false;
@@ -348,7 +363,7 @@ async function handleFormSubmit(e: Event): Promise<void> {
 }
 
 /**
- * Enter edit mode for selected item (Day4 Core Feature)
+ * Enter edit mode for selected item
  * Populates form with item data and updates UI for edit state
  * @param itemId - ID of the item to edit
  */
@@ -380,7 +395,7 @@ function handleEditItem(itemId: string): void {
 }
 
 /**
- * Exit edit mode and reset form to add mode (Day4 New Feature)
+ * Exit edit mode and reset form to add mode
  */
 function cancelEditMode(): void {
     currentEditItemId = "";
@@ -401,7 +416,7 @@ function cancelEditMode(): void {
 }
 
 /**
- * Handle item deletion with confirmation (Day4 Core Feature)
+ * Handle item deletion with confirmation
  * Shows modal to confirm deletion before removing item
  * @param itemId - ID of the item to delete
  */
@@ -422,7 +437,7 @@ function handleDeleteItem(itemId: string): void {
         // Hide modal
         DOM_ELEMENTS.confirmationModal.classList.add("hidden");
         // Success feedback
-        alert(`Item ${itemId} deleted successfully!`);
+        showToast(`Item ${itemId} deleted successfully!`, "success");
 
         // Clean up event listeners
         DOM_ELEMENTS.modalConfirmBtn.removeEventListener("click", confirmDelete);
@@ -433,7 +448,7 @@ function handleDeleteItem(itemId: string): void {
 }
 
 /**
- * Handle bulk clear inventory with confirmation (Day4 New Feature)
+ * Handle bulk clear inventory with confirmation
  */
 function handleClearInventory(): void {
     // Configure confirmation modal
@@ -452,7 +467,7 @@ function handleClearInventory(): void {
         // Hide modal
         DOM_ELEMENTS.confirmationModal.classList.add("hidden");
         // Success feedback
-        alert("All inventory items have been cleared!");
+        showToast("All inventory items have been cleared!", "success");
 
         // Clean up event listeners
         DOM_ELEMENTS.modalConfirmBtn.removeEventListener("click", confirmClear);
@@ -463,7 +478,7 @@ function handleClearInventory(): void {
 }
 
 /**
- * Close confirmation modal without action (Day4 New Feature)
+ * Close confirmation modal without action
  */
 function closeModal(): void {
     DOM_ELEMENTS.confirmationModal.classList.add("hidden");
@@ -472,7 +487,7 @@ function closeModal(): void {
 }
 
 /**
- * Search items by ID or name (case-insensitive, partial match) - Day3 Core Feature
+ * Search items by ID or name (case-insensitive, partial match)
  * @param keyword - Search term entered by user
  * @returns Filtered inventory array
  */
@@ -487,7 +502,7 @@ function searchInventory(keyword: string): InventoryItem[] {
 }
 
 /**
- * Filter inventory by popular status - Day3 Core Feature
+ * Filter inventory by popular status
  * @param items - Inventory array to filter
  * @param showOnlyPopular - Whether to show only popular items
  * @returns Filtered inventory array
@@ -498,7 +513,7 @@ function filterByPopular(items: InventoryItem[], showOnlyPopular: boolean): Inve
 }
 
 /**
- * Apply both search and filter, then re-render inventory - Day3 Core Logic
+ * Apply both search and filter, then re-render inventory
  */
 function applySearchAndFilter(): void {
     const searchTerm = DOM_ELEMENTS.searchInput.value;
@@ -511,12 +526,199 @@ function applySearchAndFilter(): void {
 }
 
 /**
- * Reset search/filter to default state - Day3 Feature
+ * Reset search/filter to default state
  */
 function resetSearchAndFilter(): void {
     DOM_ELEMENTS.searchInput.value = "";
     DOM_ELEMENTS.filterPopular.checked = false;
     applySearchAndFilter();
+}
+
+/**
+ * Day6 New: Save inventory data to browser's local storage
+ * Persists data between browser sessions
+ */
+function saveInventoryToLocalStorage(): void {
+    try {
+        // Stringify and save inventory data
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(inventoryItems));
+        showToast("Inventory saved to local storage successfully!", "success");
+    } catch (error) {
+        console.error("Error saving to local storage:", error);
+        showToast("Failed to save inventory to local storage.", "error");
+    }
+}
+
+/**
+ * Day6 New: Load inventory data from browser's local storage
+ * Restores previously saved data
+ */
+function loadInventoryFromLocalStorage(): void {
+    try {
+        // Get data from local storage
+        const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (!savedData) {
+            showToast("No saved inventory data found in local storage.", "info");
+            return;
+        }
+
+        // Parse and validate data
+        const parsedData = JSON.parse(savedData) as InventoryItem[];
+        if (Array.isArray(parsedData)) {
+            inventoryItems = parsedData;
+            applySearchAndFilter();
+            showToast("Inventory loaded from local storage successfully!", "success");
+        } else {
+            showToast("Invalid data format in local storage.", "error");
+        }
+    } catch (error) {
+        console.error("Error loading from local storage:", error);
+        showToast("Failed to load inventory from local storage.", "error");
+    }
+}
+
+/**
+ * Day6 New: Export inventory data to CSV file
+ * Creates downloadable CSV file with all inventory items
+ */
+function exportInventoryToCSV(): void {
+    try {
+        // Create CSV header
+        const header = "Item ID,Item Name,Price ($),Quantity,Is Popular\n";
+
+        // Convert inventory items to CSV rows
+        const rows = inventoryItems.map(item =>
+            `${item.id},${item.name},${item.price.toFixed(2)},${item.quantity},${item.isPopular ? "Yes" : "No"}`
+        ).join("\n");
+
+        // Combine header and rows
+        const csvContent = header + rows;
+
+        // Create blob and download link
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        // Set download attributes
+        link.setAttribute("href", url);
+        link.setAttribute("download", `inventory_export_${new Date().toISOString().split("T")[0]}.csv`);
+        link.style.display = "none";
+
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        showToast("Inventory exported to CSV successfully!", "success");
+    } catch (error) {
+        console.error("Error exporting to CSV:", error);
+        showToast("Failed to export inventory to CSV.", "error");
+    }
+}
+
+/**
+ * Day6 New: Import inventory data from CSV file
+ * Parses CSV file and adds items to inventory (skips duplicates)
+ * @param file - CSV file selected by user
+ */
+function importInventoryFromCSV(file: File): void {
+    if (!file.name.endsWith(".csv")) {
+        showToast("Please select a valid CSV file.", "error");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        try {
+            const content = e.target?.result as string;
+            if (!content) return;
+
+            // Split content into lines (skip header)
+            const lines = content.split("\n").filter(line => line.trim()).slice(1);
+            let importedCount = 0;
+            let duplicateCount = 0;
+            let invalidCount = 0;
+
+            // Process each line
+            lines.forEach(line => {
+                const [id, name, priceStr, quantityStr, isPopularStr] = line.split(",").map(field => field.trim());
+
+                // Validate required fields
+                if (!id || !name || !priceStr || !quantityStr) {
+                    invalidCount++;
+                    return;
+                }
+
+                // Parse numeric values
+                const price = parseFloat(priceStr);
+                const quantity = parseInt(quantityStr);
+                const isPopular = isPopularStr.toLowerCase() === "yes" || isPopularStr.toLowerCase() === "true";
+
+                // Validate parsed values
+                if (isNaN(price) || isNaN(quantity) || price < 0 || quantity < 0) {
+                    invalidCount++;
+                    return;
+                }
+
+                // Check for duplicate ID
+                if (inventoryItems.some(item => item.id === id)) {
+                    duplicateCount++;
+                    return;
+                }
+
+                // Add valid item to inventory
+                inventoryItems.push({
+                    id,
+                    name,
+                    price,
+                    quantity,
+                    isPopular
+                });
+                importedCount++;
+            });
+
+            // Re-render inventory
+            applySearchAndFilter();
+
+            // Show import summary
+            showToast(
+                `Import complete: ${importedCount} items added, ${duplicateCount} duplicates skipped, ${invalidCount} invalid entries`,
+                "success"
+            );
+
+        } catch (error) {
+            console.error("Error parsing CSV file:", error);
+            showToast("Failed to parse CSV file. Please check the format.", "error");
+        }
+    };
+
+    reader.readAsText(file);
+}
+
+/**
+ * Day6 New: Show toast notification for user feedback
+ * Auto-hides after 3 seconds
+ * @param message - Notification message to display
+ * @param type - Toast type (success/error/info)
+ */
+function showToast(message: string, type: "success" | "error" | "info" = "success"): void {
+    // Set message and style
+    DOM_ELEMENTS.toastMessage.textContent = message;
+    DOM_ELEMENTS.toastNotification.className = `toast ${type}`;
+
+    // Show toast
+    DOM_ELEMENTS.toastNotification.classList.remove("hidden");
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        DOM_ELEMENTS.toastNotification.classList.add("hidden");
+        // Reset class for next use
+        DOM_ELEMENTS.toastNotification.className = "toast hidden";
+    }, 3000);
 }
 
 /**
@@ -535,7 +737,7 @@ function initApp(): void {
     // Edit mode cancel
     DOM_ELEMENTS.cancelEditBtn.addEventListener("click", cancelEditMode);
 
-    // Search/filter events (Day3 Core)
+    // Search/filter events
     DOM_ELEMENTS.searchBtn.addEventListener("click", applySearchAndFilter);
     DOM_ELEMENTS.resetBtn.addEventListener("click", resetSearchAndFilter);
     DOM_ELEMENTS.filterPopular.addEventListener("change", applySearchAndFilter);
@@ -544,9 +746,20 @@ function initApp(): void {
         if (e.key === "Enter") applySearchAndFilter();
     });
 
-    // Day4 New Events
+    // Bulk actions
     DOM_ELEMENTS.clearInventoryBtn.addEventListener("click", handleClearInventory);
     DOM_ELEMENTS.modalCancelBtn.addEventListener("click", closeModal);
+
+    // Day6 New: Local Storage Events
+    DOM_ELEMENTS.saveInventoryBtn.addEventListener("click", saveInventoryToLocalStorage);
+    DOM_ELEMENTS.loadInventoryBtn.addEventListener("click", loadInventoryFromLocalStorage);
+
+    // Day6 New: Import/Export Events
+    DOM_ELEMENTS.exportBtn.addEventListener("click", exportInventoryToCSV);
+    DOM_ELEMENTS.importFileInput.addEventListener("change", (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) importInventoryFromCSV(file);
+    });
 }
 
 // Initialize the application when DOM is ready

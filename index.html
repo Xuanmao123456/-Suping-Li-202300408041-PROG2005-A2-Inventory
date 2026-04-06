@@ -59,7 +59,7 @@
         </form>
     </section>
 
-    <!-- Search & Filter (Day3 Core Feature) -->
+    <!-- Search & Filter + Import/Export (Day6 New Feature) -->
     <section class="card search-filter">
         <h2 class="section-title">Search & Filter Inventory</h2>
         <div class="search-filter-wrapper">
@@ -75,16 +75,32 @@
                     Show Only Popular Items
                 </label>
             </div>
+            <!-- Day6: Import/Export Buttons -->
+            <div class="import-export-group">
+                <label for="import-file" class="btn secondary-btn import-label">
+                    Import CSV
+                    <input type="file" id="import-file" accept=".csv" class="import-input">
+                </label>
+                <button id="export-btn" class="btn success-btn">Export to CSV</button>
+            </div>
         </div>
     </section>
 
-    <!-- Inventory List & Bulk Actions (Day4 New Feature) -->
+    <!-- Inventory List & Bulk Actions -->
     <section class="card inventory-list">
         <div class="inventory-header">
             <h2 class="section-title">Current Inventory</h2>
-            <button id="clear-inventory-btn" class="btn danger-btn">
-                Clear All Items
-            </button>
+            <div class="inventory-actions">
+                <button id="clear-inventory-btn" class="btn danger-btn">
+                    Clear All Items
+                </button>
+                <button id="save-inventory-btn" class="btn success-btn">
+                    Save to Local Storage
+                </button>
+                <button id="load-inventory-btn" class="btn success-btn">
+                    Load from Local Storage
+                </button>
+            </div>
         </div>
         <div id="items-container" class="items-grid"></div>
         <div id="empty-state" class="empty-state hidden">
@@ -94,7 +110,7 @@
     </section>
 </div>
 
-<!-- Confirmation Modal (Day4 New Feature) -->
+<!-- Confirmation Modal -->
 <div id="confirmation-modal" class="modal hidden">
     <div class="modal-content">
         <h3 id="modal-title">Confirm Action</h3>
@@ -104,6 +120,11 @@
             <button id="modal-confirm-btn" class="btn danger-btn">Confirm</button>
         </div>
     </div>
+</div>
+
+<!-- Success/Error Toast (Day6 New) -->
+<div id="toast-notification" class="toast hidden">
+    <p id="toast-message">Operation completed successfully!</p>
 </div>
 </body>
 </html>
