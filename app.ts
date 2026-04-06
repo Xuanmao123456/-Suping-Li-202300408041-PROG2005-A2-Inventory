@@ -105,24 +105,31 @@ function renderInventory(items: InventoryItem[]): void {
         itemCard.className = `item-card ${item.quantity === 0 ? "out-of-stock-card" : ""} ${item.isPopular ? "popular-card" : ""}`;
 
         // Card content with edit/delete buttons
+
+        const imageName = `${item.id}.jpg`; // Keep image filenames consistent with product IDs for easier management.
         itemCard.innerHTML = `
-            <div class="item-header">
-                <h3 class="item-name">${item.name}</h3>
-                ${item.isPopular ? '<span class="badge popular-badge">Popular</span>' : ""}
-            </div>
-            <div class="item-details">
-                <p class="item-id"><strong>ID:</strong> ${item.id}</p>
-                <p class="item-price"><strong>Price:</strong> $${item.price.toFixed(2)}</p>
-                <p class="item-quantity">
-                    <strong>Quantity:</strong> ${item.quantity}
-                    ${item.quantity === 0 ? '<span class="badge out-of-stock-badge">Out of Stock</span>' : ""}
-                </p>
-            </div>
-            <div class="item-actions">
-                <button class="btn edit-btn" data-id="${item.id}">Edit</button>
-                <button class="btn delete-btn" data-id="${item.id}">Delete</button>
-            </div>
-        `;
+    <div class="item-image-container">
+        <img src="images/${imageName}" alt="${item.name}" class="item-image" 
+             onerror="this.src='images/default.jpg'"> <!-- Show a default image when loading fails. -->
+    </div>
+    <div class="item-header">
+        <h3 class="item-name">${item.name}
+            ${item.isPopular ? '<span class="badge popular-badge">Popular</span>' : ""}
+        </h3>
+    </div>
+    <div class="item-details">
+        <p class="item-id"><strong>ID:</strong> ${item.id}</p>
+        <p class="item-price"><strong>Price:</strong> $${item.price.toFixed(2)}</p>
+        <p class="item-quantity">
+            <strong>Quantity:</strong> ${item.quantity}
+            ${item.quantity === 0 ? '<span class="badge out-of-stock-badge">Out of Stock</span>' : ""}
+        </p>
+    </div>
+    <div class="item-actions">
+        <button class="btn edit-btn" data-id="${item.id}">Edit</button>
+        <button class="btn delete-btn" data-id="${item.id}">Delete</button>
+    </div>
+`;
 
         // Add smooth fade-in animation
         itemCard.style.opacity = "0";
