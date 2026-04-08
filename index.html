@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <header class="system-header">
+        <h1>Inventory Management System</h1>
+        <p class="header-subtitle">Track and manage your inventory efficiently</p>
+    </header>
+
+    <!-- Add/Edit Item Form -->
+    <section class="card add-item-form">
+        <h2 class="section-title" id="form-title">Add New Inventory Item</h2>
+        <form id="add-item-form" class="item-form">
+            <!-- Hidden input to store edit item ID -->
+            <input type="hidden" id="edit-item-id" value="">
+
+            <div class="form-group">
+                <label for="item-id">Item ID <span class="required">*</span> (Format: ITEM000):</label>
+                <input type="text" id="item-id" class="form-input" placeholder="e.g. ITEM004" autocomplete="off">
+                <span class="error-message" id="id-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="item-name">Item Name <span class="required">*</span>:</label>
+                <input type="text" id="item-name" class="form-input" placeholder="e.g. Monitor" autocomplete="off">
+                <span class="error-message" id="name-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="item-price">Price ($) <span class="required">*</span>:</label>
+                <input type="number" id="item-price" class="form-input" min="0" step="0.01" placeholder="e.g. 199.99">
+                <span class="error-message" id="price-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="item-quantity">Quantity <span class="required">*</span>:</label>
+                <input type="number" id="item-quantity" class="form-input" min="0" placeholder="e.g. 20">
+                <span class="error-message" id="quantity-error"></span>
+            </div>
+            <div class="form-group form-checkbox">
+                <label for="item-popular">Mark as Popular Item:</label>
+                <input type="checkbox" id="item-popular" class="form-checkbox-input">
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" class="btn primary-btn" id="submit-btn">
+                    <span class="btn-text">Add Item</span>
+                    <span class="loading-spinner" id="submit-spinner"></span>
+                </button>
+                <button type="button" class="btn secondary-btn" id="cancel-edit-btn" style="display: none;">
+                    Cancel Edit
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Search & Filter + Import/Export (Day6 New Feature) -->
+    <section class="card search-filter">
+        <h2 class="section-title">Search & Filter Inventory</h2>
+        <div class="search-filter-wrapper">
+            <div class="search-group">
+                <label for="search-input" class="visually-hidden">Search Items:</label>
+                <input type="text" id="search-input" class="form-input search-input" placeholder="Search by ID/Name (case-insensitive)">
+                <button id="search-btn" class="btn primary-btn">Search</button>
+                <button id="reset-btn" class="btn secondary-btn">Reset</button>
+            </div>
+            <div class="filter-group">
+                <label for="filter-popular" class="filter-label">
+                    <input type="checkbox" id="filter-popular" class="form-checkbox-input">
+                    Show Only Popular Items
+                </label>
+            </div>
+            <!-- Day6: Import/Export Buttons -->
+            <div class="import-export-group">
+                <label for="import-file" class="btn secondary-btn import-label">
+                    Import CSV
+                    <input type="file" id="import-file" accept=".csv" class="import-input">
+                </label>
+                <button id="export-btn" class="btn success-btn">Export to CSV</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inventory List & Bulk Actions -->
+    <section class="card inventory-list">
+        <div class="inventory-header">
+            <h2 class="section-title">Current Inventory</h2>
+            <div class="inventory-actions">
+                <button id="clear-inventory-btn" class="btn danger-btn">
+                    Clear All Items
+                </button>
+                <button id="save-inventory-btn" class="btn success-btn">
+                    Save to Local Storage
+                </button>
+                <button id="load-inventory-btn" class="btn success-btn">
+                    Load from Local Storage
+                </button>
+            </div>
+        </div>
+        <div id="items-container" class="items-grid"></div>
+        <div id="empty-state" class="empty-state hidden">
+            <h3>No Items Found</h3>
+            <p>Try adjusting your search/filter or add a new item to get started</p>
+        </div>
+    </section>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 id="modal-title">Confirm Action</h3>
+        <p id="modal-message">Are you sure you want to perform this action?</p>
+        <div class="modal-actions">
+            <button id="modal-cancel-btn" class="btn secondary-btn">Cancel</button>
+            <button id="modal-confirm-btn" class="btn danger-btn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success/Error Toast (Day6 New) -->
+<div id="toast-notification" class="toast hidden">
+    <p id="toast-message">Operation completed successfully!</p>
+</div>
+</body>
+</html>
