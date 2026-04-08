@@ -1,0 +1,51 @@
+<!-- Help Page Component Template -->
+<div class="help-container">
+  <!-- Page Header -->
+  <h1 class="page-title">Help & User Guide</h1>
+  <p class="page-subtitle">Everything you need to know to use the Inventory Management System</p>
+
+  <!-- Quick Start Guide Section -->
+  <section class="quick-start-section">
+    <h2 class="section-title">Quick Start Guide</h2>
+    <div class="steps-container">
+      <!-- Repeat step card for each guide item -->
+      <div *ngFor="let step of quickStartSteps" class="step-card">
+        <div class="step-number">{{ step.step }}</div>
+        <div class="step-content">
+          <h3 class="step-title">{{ step.title }}</h3>
+          <p class="step-description">{{ step.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section with Expandable Items -->
+  <section class="faq-section">
+    <h2 class="section-title">Frequently Asked Questions (FAQ)</h2>
+    <div class="faq-container">
+      <!-- Repeat FAQ item for each question -->
+      <div *ngFor="let faq of faqs" class="faq-item">
+        <!-- Toggle button for expand/collapse -->
+        <button class="faq-question-btn" (click)="faq.expanded = !faq.expanded">
+          <span class="faq-question">{{ faq.question }}</span>
+          <span class="faq-toggle">{{ faq.expanded ? '−' : '+' }}</span>
+        </button>
+        <!-- Answer content, only visible when expanded -->
+        <div class="faq-answer" *ngIf="faq.expanded">
+          {{ faq.answer }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Support Section -->
+  <section class="support-section">
+    <div class="support-card">
+      <h2 class="support-title">Need Additional Help?</h2>
+      <p class="support-text">
+        If you have any other questions or need technical support,
+        please contact our support team at support&#64;inventorymanager.com
+      </p>
+    </div>
+  </section>
+</div>

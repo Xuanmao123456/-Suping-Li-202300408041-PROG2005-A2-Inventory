@@ -1,0 +1,51 @@
+<!-- Main Application Container -->
+<div class="app-container">
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h1 class="brand-title">Inventory Manager</h1>
+    </div>
+    <div class="navbar-links">
+      <a 
+        routerLink="/home" 
+        class="nav-link"
+        [class.active]="isRouteActive('/home')"
+      >
+        Home
+      </a>
+      <a 
+        routerLink="/inventory" 
+        class="nav-link"
+        [class.active]="isRouteActive('/inventory')"
+      >
+        Inventory Operation
+      </a>
+      <a 
+        routerLink="/search" 
+        class="nav-link"
+        [class.active]="isRouteActive('/search')"
+      >
+        Search & Filter
+      </a>
+      <a 
+        routerLink="/privacy" 
+        class="nav-link"
+        [class.active]="isRouteActive('/privacy')"
+      >
+        Privacy & Security
+      </a>
+      <a 
+        routerLink="/help" 
+        class="nav-link"
+        [class.active]="isRouteActive('/help')"
+      >
+        Help
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content Area (路由内容渲染容器) -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

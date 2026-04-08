@@ -1,0 +1,202 @@
+<!-- Inventory Operation Page - Morandi Style -->
+<div class="inventory-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Inventory Operation</h1>
+    <p class="page-subtitle">Add, edit, manage and analyze your inventory items</p>
+  </div>
+
+  <!-- Inventory Statistics Module -->
+  <div class="stats-card">
+    <h2 class="card-title">Inventory Statistics</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-label">Total Items</div>
+        <div class="stat-value">{{ getTotalItems() }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Total Quantity</div>
+        <div class="stat-value">{{ getTotalQuantity() }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Total Value</div>
+        <div class="stat-value">${{ getTotalValue().toFixed(2) }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popular Recommendations Module -->
+  <div class="popular-card" *ngIf="getPopularItems().length > 0">
+    <h2 class="card-title">Popular Recommendations</h2>
+    <div class="popular-list">
+      <div class="popular-item" *ngFor="let item of getPopularItems()">
+        <span class="item-name">{{ item.itemName }}</span>
+        <span class="item-id">ID: {{ item.itemId }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Item Form -->
+  <div class="form-card">
+    <h2 class="card-title">{{ isEditMode ? 'Edit Inventory Item' : 'Add New Inventory Item' }}</h2>
+    
+    <div class="form-grid">
+      <!-- Item ID -->
+      <div class="form-group">
+        <label for="itemId">Item ID *</label>
+        <input 
+          type="text" 
+          id="itemId" 
+          [(ngModel)]="inventoryItem.itemId" 
+          placeholder="Enter unique item ID"
+          [readonly]="isEditMode"
+          class="form-input"
+        >
+      </div>
+
+      <!-- Item Name -->
+      <div class="form-group">
+        <label for="itemName">Item Name *</label>
+        <input 
+          type="text" 
+          id="itemName" 
+          [(ngModel)]="inventoryItem.itemName" 
+          placeholder="Enter item name"
+          class="form-input"
+        >
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <input 
+          type="text" 
+          id="category" 
+          [(ngModel)]="inventoryItem.category" 
+          placeholder="Enter item category"
+          class="form-input"
+        >
+      </div>
+
+      <!-- Price -->
+      <div class="form-group">
+        <label for="price">Price * ($)</label>
+        <input 
+          type="number" 
+          id="price" 
+          [(ngModel)]="inventoryItem.price" 
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+          class="form-input"
+        >
+      </div>
+
+      <!-- Quantity -->
+      <div class="form-group">
+        <label for="quantity">Quantity *</label>
+        <input 
+          type="number" 
+          id="quantity" 
+          [(ngModel)]="inventoryItem.quantity" 
+          placeholder="0"
+          min="0"
+          class="form-input"
+        >
+      </div>
+
+      <!-- Stock Status (Dropdown) -->
+      <div class="form-group">
+        <label for="stockStatus">Stock Status *</label>
+        <select 
+          id="stockStatus" 
+          [(ngModel)]="inventoryItem.stockStatus"
+          class="form-select"
+        >
+          <option value="In Stock">In Stock</option>
+          <option value="Out of Stock">Out of Stock</option>
+        </select>
+      </div>
+
+      <!-- Popular Item (Dropdown) -->
+      <div class="form-group">
+        <label for="popularItem">Popular Item *</label>
+        <select 
+          id="popularItem" 
+          [(ngModel)]="inventoryItem.popularItem"
+          class="form-select"
+        >
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+
+      <!-- Supplier Name -->
+      <div class="form-group">
+        <label for="supplier">Supplier Name *</label>
+        <input 
+          type="text" 
+          id="supplier" 
+          [(ngModel)]="inventoryItem.supplier" 
+          placeholder="Enter supplier name"
+          class="form-input"
+        >
+      </div>
+
+      <!-- Description (Optional) -->
+      <div class="form-group full-width">
+        <label for="description">Description (Optional)</label>
+        <textarea 
+          id="description" 
+          [(ngModel)]="inventoryItem.description" 
+          placeholder="Additional notes about the item..."
+          rows="3"
+          class="form-textarea"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="form-actions">
+      <button 
+        class="btn primary-btn" 
+        (click)="isEditMode ? saveEdit() : addItem()"
+      >
+        {{ isEditMode ? 'Save Edit' : 'Add Item' }}
+      </button>
+      <button class="btn secondary-btn" (click)="resetForm()">Reset</button>
+    </div>
+  </div>
+
+  <!-- Current Inventory List -->
+  <div class="list-card" *ngIf="inventoryList.length > 0">
+    <h2 class="card-title">Current Inventory List</h2>
+    <div class="inventory-table">
+      <div class="table-header">
+        <div>ID</div>
+        <div>Name</div>
+        <div>Category</div>
+        <div>Price</div>
+        <div>Quantity</div>
+        <div>Stock Status</div>
+        <div>Popular</div>
+        <div>Actions</div>
+      </div>
+      <div class="table-body">
+        <div class="table-row" *ngFor="let item of inventoryList; let i = index">
+          <div>{{ item.itemId }}</div>
+          <div>{{ item.itemName }}</div>
+          <div>{{ item.category }}</div>
+          <div>${{ item.price }}</div>
+          <div>{{ item.quantity }}</div>
+          <div>{{ item.stockStatus }}</div>
+          <div>{{ item.popularItem }}</div>
+          <div class="action-buttons">
+            <button class="btn edit-btn" (click)="loadItemForEdit(i)">Edit</button>
+            <button class="btn delete-btn" (click)="deleteItem(i)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

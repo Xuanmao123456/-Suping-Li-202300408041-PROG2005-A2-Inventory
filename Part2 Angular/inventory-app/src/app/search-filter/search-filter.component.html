@@ -1,0 +1,74 @@
+<!-- Search & Filter Page Template -->
+<div class="search-container">
+  <h1 class="page-title">Search & Filter Inventory</h1>
+  <p class="page-subtitle">Find items by name, ID or category</p>
+
+  <!-- Search & Filter Controls -->
+  <div class="filter-controls-card">
+    <div class="search-group">
+      <label for="searchTerm">Search Items</label>
+      <div class="search-input-group">
+        <input 
+          type="text" 
+          id="searchTerm" 
+          [(ngModel)]="searchTerm" 
+          (input)="filterItems()"
+          placeholder="Search by ID, name or category..."
+        >
+        <button class="btn search-btn" (click)="filterItems()">🔍 Search</button>
+      </div>
+    </div>
+
+    <div class="category-filter-group">
+      <label for="category">Filter by Category</label>
+      <select 
+        id="category" 
+        [(ngModel)]="selectedCategory" 
+        (change)="filterItems()"
+      >
+        <option value="">All Categories</option>
+        <option *ngFor="let category of getUniqueCategories()" [value]="category">
+          {{ category }}
+        </option>
+      </select>
+    </div>
+
+    <button class="btn reset-btn" (click)="resetFilters()">Reset Filters</button>
+  </div>
+
+  <!-- Search Results -->
+  <div class="results-card">
+    <h2 class="results-title">
+      Search Results ({{ filteredResults.length }})
+    </h2>
+
+    <div class="results-table" *ngIf="filteredResults.length > 0; else noResults">
+      <div class="table-header">
+        <div>ID</div>
+        <div>Name</div>
+        <div>Category</div>
+        <div>Price</div>
+        <div>Quantity</div>
+        <div>Stock Status</div>
+        <div>Popular</div>
+      </div>
+      <div class="table-body">
+        <div class="table-row" *ngFor="let item of filteredResults">
+          <div>{{ item.itemId }}</div>
+          <div>{{ item.itemName }}</div>
+          <div>{{ item.category }}</div>
+          <div>${{ item.price }}</div>
+          <div>{{ item.quantity }}</div>
+          <div>{{ item.stockStatus }}</div>
+          <div>{{ item.popularItem }}</div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noResults>
+      <div class="no-results">
+        No items found matching your search criteria.
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,188 @@
+/* ============================================
+   Help Component Styles
+   Implements Morandi small fresh color scheme
+   Responsive design for all screen sizes
+   ============================================ */
+
+/* Main container for help page */
+.help-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Page title styling */
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--morandi-text);
+  margin-bottom: 8px;
+}
+
+/* Page subtitle styling */
+.page-subtitle {
+  font-size: 1.125rem;
+  color: var(--morandi-text-light);
+  margin-bottom: 32px;
+}
+
+/* Section title styling (consistent across all sections) */
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--morandi-primary);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--morandi-border);
+}
+
+/* ============================================
+   Quick Start Guide Styles
+   ============================================ */
+.quick-start-section {
+  margin-bottom: 48px;
+}
+
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step-card {
+  display: flex;
+  gap: 16px;
+  background-color: var(--morandi-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  align-items: flex-start;
+}
+
+.step-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  background-color: var(--morandi-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--morandi-text);
+  margin-bottom: 8px;
+}
+
+.step-description {
+  font-size: 1rem;
+  color: var(--morandi-text-light);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================
+   FAQ Section Styles
+   ============================================ */
+.faq-section {
+  margin-bottom: 48px;
+}
+
+.faq-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-item {
+  background-color: var(--morandi-card);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.faq-question-btn {
+  width: 100%;
+  padding: 16px 20px;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--morandi-text);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.faq-question-btn:hover {
+  background-color: var(--morandi-card-hover);
+}
+
+.faq-toggle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--morandi-primary);
+}
+
+.faq-answer {
+  padding: 0 20px 16px;
+  font-size: 1rem;
+  color: var(--morandi-text-light);
+  line-height: 1.6;
+  border-top: 1px solid var(--morandi-border);
+}
+
+/* ============================================
+   Support Section Styles
+   ============================================ */
+.support-section {
+  margin-bottom: 40px;
+}
+
+.support-card {
+  background-color: rgba(163, 184, 184, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  border: 1px solid var(--morandi-primary);
+}
+
+.support-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--morandi-primary);
+  margin-bottom: 12px;
+}
+
+.support-text {
+  font-size: 1rem;
+  color: var(--morandi-text);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+@media (max-width: 768px) {
+  .step-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+  }
+}

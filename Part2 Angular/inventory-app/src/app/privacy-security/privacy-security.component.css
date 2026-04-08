@@ -1,0 +1,57 @@
+/* Privacy & Security Component Styles */
+.privacy-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--morandi-text);
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 1.125rem;
+  color: var(--morandi-text-light);
+  margin-bottom: 32px;
+}
+
+.content-card {
+  background-color: var(--morandi-card);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--morandi-primary);
+  margin-bottom: 16px;
+}
+
+.content-text {
+  font-size: 1rem;
+  color: var(--morandi-text);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.security-list {
+  list-style: none;
+  padding: 0;
+}
+
+.security-list li {
+  font-size: 1rem;
+  color: var(--morandi-text);
+  line-height: 1.7;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--morandi-border);
+}
+
+.security-list li:last-child {
+  border-bottom: none;
+}

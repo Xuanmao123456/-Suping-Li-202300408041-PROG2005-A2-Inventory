@@ -1,0 +1,36 @@
+<!-- Home Page Template - System Introduction & Feature Showcase -->
+<div class="home-container">
+  <!-- Welcome Section -->
+  <header class="welcome-section">
+    <h1 class="welcome-title">Welcome to Angular Inventory Management System</h1>
+    <p class="welcome-subtitle">
+      This application is the Angular version of PROG2005 A2 Part1, developed for mobile and web systems programming.
+      It implements all core functions of inventory management, complying with user-centered design principles
+      and mobile privacy & security requirements.
+    </p>
+  </header>
+
+  <!-- Core Application Purpose Section -->
+  <section class="purpose-section">
+    <h2 class="section-title">Core Application Purpose</h2>
+    <ul class="purpose-list">
+      <li>Manage inventory items with add, edit, delete, search and filter functions</li>
+      <li>Support responsive design for mobile and desktop devices</li>
+      <li>Implement strict data validation to ensure data integrity</li>
+      <li>Analyze and display privacy & security requirements for mobile inventory apps</li>
+      <li>Provide detailed help documentation and FAQs for users</li>
+    </ul>
+  </section>
+
+  <!-- Key Features Section with Card Grid -->
+  <section class="features-section">
+    <h2 class="section-title">Key Features</h2>
+    <div class="features-grid">
+      <div *ngFor="let feature of features" class="feature-card">
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3 class="feature-title">{{ feature.title }}</h3>
+        <p class="feature-description">{{ feature.description }}</p>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,76 @@
+/* ============================================
+   GLOBAL STYLES & MORANDI COLOR SYSTEM
+   ============================================ */
+:root {
+  /* Core Morandi Palette (Small Fresh Style) */
+  --morandi-primary: #A3B8B8;    /* Soft Blue-Green (Main Theme) */
+  --morandi-secondary: #B8C7B8;  /* Light Grass Green (Accent) */
+  --morandi-danger: #C98A8A;     /* Soft Red (Delete) */
+  --morandi-success: #8AA899;    /* Soft Green (Add/Save) */
+  --morandi-bg: #F8F7F4;         /* Off-White (Page Background) */
+  --morandi-card: #FFFFFF;       /* White (Card/Container) */
+  --morandi-text: #2D3134;       /* Dark Grey (Main Text) */
+  --morandi-text-light: #6B7276; /* Light Grey (Sub Text) */
+  --morandi-border: #E0DDD9;     /* Light Border */
+}
+
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--morandi-bg) !important; /* 强制背景色生效 */
+  color: var(--morandi-text);
+  line-height: 1.6;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+/* Global Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--morandi-text);
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--morandi-text-light);
+}
+
+/* Global Button Styles */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* Global Input/Select Styles */
+input, select, textarea {
+  font-family: inherit;
+  outline: none;
+  border: 1px solid var(--morandi-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9375rem;
+  color: var(--morandi-text);
+  background-color: var(--morandi-card);
+  transition: border-color 0.2s ease;
+}
+
+input:focus {
+  border-color: var(--morandi-primary);
+  box-shadow: 0 0 0 3px rgba(163, 184, 184, 0.1);
+}
